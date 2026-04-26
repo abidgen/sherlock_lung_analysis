@@ -1,0 +1,6 @@
+data/
+figures/
+logs/
+.Rhistory
+.RData
+.Ruserdata
