@@ -5,7 +5,7 @@
 # ============================================================
 
 # ---- PATHS ----
-BASE    <- "/analysis"
+BASE    <- "/media/wrath/bioinfor_learning/sherlock_lung"
 DATA    <- file.path(BASE, "data/TCGA_LUAD")
 FIGURES <- file.path(BASE, "figures")
 dir.create(FIGURES, showWarnings=FALSE, recursive=TRUE)
@@ -51,9 +51,9 @@ print(table(clin$tobacco_smoking_history, useNA="always"))
 # 5 = Current reformed smoker, duration unknown
 
 # ---- 3. DEFINE GROUPS ----
-never_ids <- rownames(clin)[clin$tobacco_smoking_history == 1 & 
+never_ids <- substr(rownames(clin), 1, 12)[clin$tobacco_smoking_history == 1 & 
                              !is.na(clin$tobacco_smoking_history)]
-smoker_ids <- rownames(clin)[clin$tobacco_smoking_history %in% c(2,3,4) & 
+smoker_ids <- substr(rownames(clin), 1, 12)[clin$tobacco_smoking_history %in% c(2,3,4) & 
                               !is.na(clin$tobacco_smoking_history)]
 
 message(paste("Never-smokers:", length(never_ids)))
@@ -76,7 +76,6 @@ expr_subset <- cbind(expr_never, expr_smoker)
 
 # ---- 4. DIFFERENTIAL EXPRESSION — DESeq2 ----
 message("Running DESeq2...")
-library(Seurat)  # For NormalizeData
 # Note: Xena HiSeqV2 is log2(x+1) normalized RPKM
 # Convert back to integer-like counts for DESeq2
 # OR use limma/voom which handles normalized data
@@ -205,19 +204,42 @@ estimateScore(input.ds=file.path(DATA, "expr_filtered.gct"),
               output.ds=file.path(DATA, "estimate_scores.gct"))
 
 # Load ESTIMATE results
-est_scores <- read.table(file.path(DATA, "estimate_scores.gct"),
-                         skip=2, header=TRUE, sep="\t", row.names=1)
+est_scores <- read.table(
+  file.path(DATA, "estimate_scores.gct"),
+  skip=2,
+  header=TRUE,
+  sep="\t",
+  row.names=1,
+  check.names=FALSE
+)
 est_scores <- est_scores[,-1]
 est_scores_t <- as.data.frame(t(est_scores))
-est_scores_t$sample_id <- rownames(est_scores_t)
+
+# ESTIMATE/read.table may convert TCGA barcodes from hyphen to dot format.
+# Normalize back to TCGA-XX-XXXX-XX style before matching clinical IDs.
+est_scores_t$sample_id <- gsub("\\.", "-", rownames(est_scores_t))
+est_scores_t$sample_id <- sub("^X", "", est_scores_t$sample_id)
 
 # Add smoking status
-est_scores_t$smoking <- ifelse(
-  substr(est_scores_t$sample_id, 1, 12) %in% never_ids,
-  "Never-Smoker", "Smoker"
-)
-est_scores_t <- est_scores_t[est_scores_t$smoking %in% c("Never-Smoker", "Smoker"),]
+est_scores_t$patient_id <- substr(est_scores_t$sample_id, 1, 12)
 
+est_scores_t$smoking <- dplyr::case_when(
+  est_scores_t$patient_id %in% never_ids  ~ "Never-Smoker",
+  est_scores_t$patient_id %in% smoker_ids ~ "Smoker",
+  TRUE ~ NA_character_
+)
+
+est_scores_t <- est_scores_t %>%
+  dplyr::filter(!is.na(smoking))
+  
+message("ESTIMATE smoking groups after matching:")
+print(table(est_scores_t$smoking, useNA="always"))
+
+if (nrow(est_scores_t) == 0) {
+  stop("No ESTIMATE samples matched smoking groups. Check sample_id format.")
+}
+
+library(ggpubr)
 # ---- FIGURE 2 — IMMUNE/STROMAL SCORES ----
 message("Generating Figure 2: ESTIMATE immune scores...")
 
@@ -254,6 +276,7 @@ message("Figure 2 saved.")
 # ---- 6. GSEA PATHWAY ANALYSIS ----
 message("Running GSEA...")
 library(clusterProfiler)
+library(enrichplot)
 library(org.Hs.eg.db)
 
 # Ranked gene list for GSEA
@@ -310,19 +333,29 @@ surv_data <- est_scores_t %>%
   mutate(patient_id=substr(sample_id, 1, 12)) %>%
   left_join(
     clin %>% 
-      select(sampleID, 
-             OS.time=days_to_death,
-             OS.status=vital_status,
-             tobacco_smoking_history) %>%
+      dplyr::select(
+        sampleID, 
+        OS.time=days_to_death,
+        OS.time2=days_to_last_followup,
+        OS.status=vital_status,
+        days_to_last_followup,
+        tobacco_smoking_history
+      ) %>%
       mutate(patient_id=substr(sampleID, 1, 12)),
     by="patient_id"
   ) %>%
-  filter(!is.na(OS.time) & !is.na(ImmuneScore)) %>%
+  filter((!is.na(OS.time) | !is.na(OS.time2)), !is.na(ImmuneScore)) %>%
   mutate(
-    OS.time=as.numeric(OS.time)/365,
-    OS.status=ifelse(OS.status=="Dead", 1, 0),
-    ImmuneHigh=ifelse(ImmuneScore > median(ImmuneScore, na.rm=TRUE),
-                      "Immune High", "Immune Low")
+    OS.time = as.numeric(ifelse(!is.na(OS.time), OS.time, OS.time2)) / 365,
+    OS.status = ifelse(!is.na(OS.status) & OS.status == "Dead", 1, 0)
+  ) %>%
+  filter(!is.na(OS.time), OS.time > 0) %>%
+  mutate(
+    ImmuneHigh = ifelse(
+      ImmuneScore > median(ImmuneScore, na.rm=TRUE),
+      "Immune High",
+      "Immune Low"
+    )
   )
 
 # Kaplan-Meier by immune score
@@ -347,8 +380,9 @@ p_surv <- ggsurvplot(
   ggtheme=theme_classic(base_size=12)
 )
 
-ggsave(file.path(FIGURES, "Fig4_Survival_ImmuneScore.png"),
-       print(p_surv), width=10, height=8, dpi=300)
+png(file.path(FIGURES, "Fig4_Survival_ImmuneScore.png"), width=3000, height=2400, res=300)
+print(p_surv)
+dev.off()
 message("Figure 4 saved.")
 
 # ---- FINAL SUMMARY ----
