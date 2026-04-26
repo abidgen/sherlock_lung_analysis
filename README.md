@@ -46,32 +46,32 @@ sherlock_lung/
 ├── logs/                            # Timestamped run logs; not committed to git
 ├── envs/
 │   └── sherlock_lung_environment.yml
-├── renv.lock
-├── renv/
-└── .Rprofile
+├── README.md
+└── .gitignore
 ```
 
 ## Reproducibility
 
-This project uses two reproducibility layers:
+This project uses a **conda-only reproducibility setup**. The environment file pins the R runtime plus the CRAN and Bioconductor packages required for the analysis, including `maftools`, `limma`, `clusterProfiler`, `enrichplot`, `org.Hs.eg.db`, `ggplot2`, `dplyr`, `ggpubr`, `survminer`, and related dependencies.
 
-1. **Conda environment export** for system-level and conda-managed dependencies.
-2. **renv lockfile** for R package version pinning.
-
-Minimum reproducibility files to keep under version control:
+The primary reproducibility file is:
 
 ```text
 envs/sherlock_lung_environment.yml
-renv.lock
-renv/
-.Rprofile
+```
+
+Minimum files to keep under version control:
+
+```text
+envs/sherlock_lung_environment.yml
 scripts/01_TCGA_LUAD_analysis.R
 scripts/02_MAF_analysis.R
 scripts/run_analysis.sh
 README.md
+.gitignore
 ```
 
-Generated outputs and large input files should usually stay out of git:
+Generated outputs and large input files should stay out of git:
 
 ```text
 data/
@@ -79,12 +79,15 @@ figures/
 logs/
 ```
 
-Recommended `.gitignore` entries:
+Recommended `.gitignore`:
 
 ```text
 data/
 figures/
 logs/
+renv/
+renv.lock
+.Rprofile
 .Rhistory
 .RData
 .Ruserdata
@@ -95,17 +98,14 @@ logs/
 From the project root:
 
 ```bash
-cd /media/wrath/bioinfor_learning/sherlock_lung
 conda env create -f envs/sherlock_lung_environment.yml
 conda activate sherlock_lung
-Rscript -e 'renv::restore(prompt=FALSE)'
 ```
 
 If the conda environment already exists:
 
 ```bash
 conda activate sherlock_lung
-Rscript -e 'renv::restore(prompt=FALSE)'
 ```
 
 To update the environment pin after changing packages:
@@ -113,22 +113,20 @@ To update the environment pin after changing packages:
 ```bash
 mkdir -p envs
 conda env export --no-builds > envs/sherlock_lung_environment.yml
-Rscript -e 'renv::snapshot(prompt=FALSE)'
 ```
 
-If `renv` is not installed and R asks for a CRAN mirror:
+To confirm key packages are available:
 
 ```bash
-Rscript -e 'options(repos=c(CRAN="https://cloud.r-project.org")); install.packages("renv")'
-Rscript -e 'renv::snapshot(prompt=FALSE)'
+Rscript -e 'pkgs <- c("maftools", "limma", "clusterProfiler", "enrichplot", "org.Hs.eg.db", "ggplot2", "dplyr", "ggpubr", "survminer"); sapply(pkgs, function(p) { library(p, character.only=TRUE); as.character(packageVersion(p)) })'
 ```
 
 ## Running the Analysis
 
-Run the full pipeline:
+Run the full pipeline from the project root:
 
 ```bash
-cd /media/wrath/bioinfor_learning/sherlock_lung
+conda activate sherlock_lung
 chmod +x scripts/run_analysis.sh
 ./scripts/run_analysis.sh
 ```
@@ -185,6 +183,7 @@ Rscript scripts/01_TCGA_LUAD_analysis.R
 - Survival analysis uses `days_to_death` when available and falls back to `days_to_last_followup` for censored samples.
 - The MAF driver comparison figure is filtered to significant genes with enough mutated samples to keep the forest plot readable.
 - The EGFR lollipop plot labels only key interpretable positions; the full EGFR mutation label table is exported separately for slides.
+- `renv` is intentionally not used because it conflicted with conda-installed Bioconductor packages by overriding `.libPaths()`.
 
 ## Data Sources
 
@@ -197,9 +196,8 @@ Rscript scripts/01_TCGA_LUAD_analysis.R
 A minimal reproducible run should include:
 
 ```bash
-cd /media/wrath/bioinfor_learning/sherlock_lung
+conda env create -f envs/sherlock_lung_environment.yml
 conda activate sherlock_lung
-Rscript -e 'renv::restore(prompt=FALSE)'
 ./scripts/run_analysis.sh
 ```
 
