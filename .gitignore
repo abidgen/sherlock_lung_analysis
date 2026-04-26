@@ -1,6 +1,9 @@
 data/
 figures/
 logs/
+renv/
+renv.lock
+.Rprofile
 .Rhistory
 .RData
 .Ruserdata
