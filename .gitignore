@@ -7,4 +7,4 @@ renv.lock
 .Rhistory
 .RData
 .Ruserdata
-.pdf
+*.pdf
