@@ -70,7 +70,8 @@ echo "============================================"
 for f in \
   "$BASE/data/TCGA_LUAD/TCGA_LUAD_clinical.tsv" \
   "$BASE/data/TCGA_LUAD/TCGA_LUAD_HiSeqV2.gz" \
-  "$BASE/data/TCGA_LUAD/TCGA_LUAD_somatic.maf.gz"; do
+  "$BASE/data/TCGA_LUAD/TCGA_LUAD_somatic.maf.gz" \
+  "$BASE/data/TCGA_LUAD/TCGA_PANCAN_CNA.tsv.gz"; do
   if [ ! -s "$f" ]; then
     echo "ERROR: required input missing or empty: $f"
     exit 1
