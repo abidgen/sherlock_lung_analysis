@@ -44,11 +44,21 @@ clin_file <- check_file(file.path(DATA, "TCGA_LUAD_clinical.tsv"))
 # ============================================================
 # 1. Load expression and clinical data
 # ============================================================
-message("Loading expression data...")
 expr_raw <- fread(expr_file, data.table = FALSE)
 rownames(expr_raw) <- expr_raw[[1]]
 expr_raw <- expr_raw[, -1, drop = FALSE]
-message("Expression: ", nrow(expr_raw), " genes x ", ncol(expr_raw), " samples")
+
+# Filter to primary tumor samples only (TCGA barcode positions 14-15 = "01")
+# Positions 1-12: patient ID, 13: "-", 14-15: sample type, 16: "-", 17-19: vial
+barcodes_fixed   <- gsub("\\.", "-", colnames(expr_raw))
+sample_type_code <- substr(barcodes_fixed, 14, 15)
+message("Sample type codes in expression matrix:")
+print(table(sample_type_code))
+primary_cols <- which(sample_type_code == "01")
+message("Retaining ", length(primary_cols), " primary tumor samples (type 01)")
+expr_raw <- expr_raw[, primary_cols, drop = FALSE]
+
+message("Expression after filtering: ", nrow(expr_raw), " genes x ", ncol(expr_raw), " samples")
 
 message("Loading clinical data...")
 clin <- fread(clin_file, data.table = FALSE)
