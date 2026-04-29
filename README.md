@@ -223,6 +223,7 @@ Rscript scripts/03_integrated_analysis.R
 - Survival event coding uses TCGA-style clinical values such as `DECEASED` and `LIVING`; survival figures are skipped if too few events are available.
 - The MAF pathway section uses `maftools::pathways()` / `maftools::plotPathways()` only if those functions exist in the installed maftools version.
 - The integrated CNA analysis is optional and supports either LUAD-specific CNA files or the PanCancer file `TCGA_PANCAN_CNA.tsv.gz`.
+- The expression matrix is filtered to primary tumor samples only (TCGA barcode positions 14–15 = "01") before differential expression, ESTIMATE, GSEA, and survival analysis, removing normal adjacent tissue (type 11) and recurrent tumor (type 02) samples. The filtered dataset includes 515 primary tumor samples (75 never-smoker, 422 smoker, remainder unannotated for smoking status).
 - Telomere analysis was removed from the main workflow because the LUAD-specific Xena telomere path was not reliably downloadable.
 
 ## Recreating a Run
