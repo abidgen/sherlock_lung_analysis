@@ -298,20 +298,6 @@ ls -lh data/TCGA_LUAD/CNA_summary.csv 2>/dev/null || true
 
 ## Troubleshooting
 
-### `python3: can't open file ... data/TCGA_LUAD/scripts/download_luad_maf.py`
-
-This means `download_data.sh` is calling the helper script with a path relative to the data directory. The correct call is:
-
-```bash
-python3 "$BASE/scripts/download_luad_maf.py" --output "$MAF_OUT" --batch-size 100
-```
-
-Also make sure the helper exists:
-
-```bash
-ls -lh scripts/download_luad_maf.py
-```
-
 ### GDC MAF download is slow
 
 The MAF download queries many open-access per-sample files and downloads them in batches. This can take several minutes. Use `--skip-existing` after a successful run.

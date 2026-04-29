@@ -242,13 +242,4 @@ ls -lh figures/*.png
 ls -lh logs/*.log
 ```
 
-## Git Workflow
 
-After script or environment changes:
-
-```bash
-git status
-git add README.md scripts/ envs/sherlock_lung_environment.yml .gitignore
-git commit -m "Update Sherlock-Lung analysis workflow"
-git push
-```
