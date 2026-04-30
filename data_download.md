@@ -1,7 +1,6 @@
 # Data Sources — Sherlock-Lung TCGA LUAD Analysis
 
 **Abid Al Reza, PhD**  
-Prepared for: Computational Scientist II interview, CGR/FNL/NCI (req4512)
 
 All required data are public and open-access. No dbGaP authentication is required for the TCGA LUAD files used in this reproducible pipeline.
 
