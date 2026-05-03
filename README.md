@@ -1,5 +1,5 @@
 # Sherlock-Lung Presentation Analysis
-**Abid Al Reza, PhD**  
+**Abid Al Reza, PhD **  
 
 ## Scientific Question
 
