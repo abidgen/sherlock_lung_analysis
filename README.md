@@ -40,7 +40,7 @@ The Sherlock-Lung studies characterized the somatic landscape of never-smoker lu
 2. EGFR-dominant driver profile in never-smoker LUAD.
 3. Distinct tumor microenvironment and immune-score patterns.
 4. Differential expression and Hallmark pathway activation by smoking group.
-5. Integrated EGFR mutation, expression, and optional copy-number support.
+5. Integrated EGFR mutation, expression, and optional copy-number support. 
 
 ## Project Structure
 
