@@ -1,6 +1,6 @@
 # Data Sources — Sherlock-Lung TCGA LUAD Analysis
 
-**Abid Al Reza, PhD**  
+**Abid Al Reza, PhD **  
 
 All required data are public and open-access. No dbGaP authentication is required for the TCGA LUAD files used in this reproducible pipeline.
 
