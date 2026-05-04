@@ -13,9 +13,10 @@ This is not Sherlock-Lung controlled-access WGS data. It is a reproducible publi
 
 ## Selected Results
 
-### 1. Mutation burden summary
-
 These selected figures are intended as a quick-review summary; full generated outputs are excluded from git to keep the repository lightweight.
+
+
+### 1. Mutation burden summary
 
 ![Mutation burden summary](selected_figures/01_summary_statistics.png)
 
