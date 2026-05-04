@@ -10,4 +10,4 @@ renv.lock
 .Ruserdata
 *.pdf
 *.pptx
-
+*.tar.gz
