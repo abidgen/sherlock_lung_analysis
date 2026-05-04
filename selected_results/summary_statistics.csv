@@ -1,0 +1,6 @@
+Feature,Never_Smoker,Smoker,P_value
+Samples (n),69,420,—
+Median mutations per sample,38,189.5,1.85e-20
+EGFR mutation frequency,40.6%,9.5%,see mafCompare
+KRAS mutation frequency,7.2%,31.4%,see mafCompare
+COSMIC_4 mean contribution,11.6%,39%,see Fig4d

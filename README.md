@@ -1,9 +1,30 @@
 # Sherlock-Lung Presentation Analysis
-**Abid Al Reza, PhD **  
+**Abid Al Reza, PhD**  
 
 ## Scientific Question
 
 How does the somatic mutational landscape differ between never-smoker and smoker lung adenocarcinoma, and what does this tell us about endogenous mutational processes, driver biology, immune context, and copy-number support in never-smoker lung cancer?
+
+## Analysis Overview
+
+This project uses public TCGA-LUAD data as an independent demonstration cohort to examine Sherlock-Lung-relevant biology in lung adenocarcinoma. The analysis compares never-smoker and smoker tumors across somatic mutation burden, mutational signatures, driver alterations, EGFR expression, copy-number context, immune scores, and pathway enrichment.
+
+This is not Sherlock-Lung controlled-access WGS data. It is a reproducible public-data demonstration analysis designed to show how mutation, expression, CNA, immune, and pathway layers can be integrated around never-smoker lung cancer biology.
+
+## Selected Results
+
+| Theme | Figure | Interpretation |
+|---|---|---|
+| Mutation burden | `selected_figures/01_summary_statistics.png` | Never-smoker LUAD shows lower mutation burden than smoker LUAD. |
+| Mutational process | `selected_figures/02_titv_comparison.png` | Smoker tumors show stronger tobacco-associated mutational patterns. |
+| Driver landscape | `selected_figures/03_driver_comparison.png` | EGFR is enriched in never-smoker LUAD, while KRAS and high-passenger-burden genes are more frequent in smokers. |
+| EGFR expression | `selected_figures/04_egfr_expression_by_mutation.png` | EGFR-mutant tumors show higher EGFR expression, linking DNA alteration to RNA-level output. |
+| Copy-number context | `selected_figures/05_egfr_mutation_amplification.png` | EGFR mutation and amplification can be jointly summarized across smoking groups. |
+| Pathway biology | `selected_figures/06_gsea_hallmark.png` | Differential pathway analysis highlights proliferation, DNA repair, metabolic, EMT, and immune-related programs. |
+
+The curated numeric result tables supporting these figures are available in `selected_results/`, including `summary_statistics.csv` and `CNA_summary.csv`.
+
+
 
 ## Dataset
 
@@ -50,12 +71,16 @@ sherlock_lung/
 │   ├── 01_TCGA_LUAD_analysis.R       # Expression, ESTIMATE, Hallmark/KEGG GSEA, survival
 │   ├── 02_MAF_analysis.R             # Somatic mutation / MAF analysis
 │   ├── 03_integrated_analysis.R      # EGFR expression, EGFR-mutant DE, optional CNA
+│   ├── download_data.sh              # Public TCGA-LUAD data download helper
 │   └── run_analysis.sh               # Full pipeline wrapper
 ├── data/TCGA_LUAD/                   # Input data; not committed to git
-├── figures/                          # Generated figures; not committed to git
+├── selected_figures/                 # Curated selected figures committed for quick review
+├── selected_results/                 # Curated summary tables committed for quick review
+├── figures/                          # Full generated figure set; not committed to git
 ├── logs/                             # Timestamped run logs; not committed to git
 ├── envs/
 │   └── sherlock_lung_environment.yml # Conda environment pin
+├── data_download.md
 ├── README.md
 └── .gitignore
 ```
