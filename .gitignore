@@ -2,9 +2,12 @@ data/
 figures/
 logs/
 renv/
+others/
 renv.lock
 .Rprofile
 .Rhistory
 .RData
 .Ruserdata
 *.pdf
+*.pptx
+
