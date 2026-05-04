@@ -15,6 +15,8 @@ This is not Sherlock-Lung controlled-access WGS data. It is a reproducible publi
 
 ### 1. Mutation burden summary
 
+These selected figures are intended as a quick-review summary; full generated outputs are excluded from git to keep the repository lightweight.
+
 ![Mutation burden summary](selected_figures/01_summary_statistics.png)
 
 **Interpretation:** Never-smoker LUAD shows lower mutation burden than smoker LUAD.
