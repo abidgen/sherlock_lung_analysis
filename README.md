@@ -13,14 +13,51 @@ This is not Sherlock-Lung controlled-access WGS data. It is a reproducible publi
 
 ## Selected Results
 
-| Theme | Figure | Interpretation |
-|---|---|---|
-| Mutation burden | `selected_figures/01_summary_statistics.png` | Never-smoker LUAD shows lower mutation burden than smoker LUAD. |
-| Mutational process | `selected_figures/02_titv_comparison.png` | Smoker tumors show stronger tobacco-associated mutational patterns. |
-| Driver landscape | `selected_figures/03_driver_comparison.png` | EGFR is enriched in never-smoker LUAD, while KRAS and high-passenger-burden genes are more frequent in smokers. |
-| EGFR expression | `selected_figures/04_egfr_expression_by_mutation.png` | EGFR-mutant tumors show higher EGFR expression, linking DNA alteration to RNA-level output. |
-| Copy-number context | `selected_figures/05_egfr_mutation_amplification.png` | EGFR mutation and amplification can be jointly summarized across smoking groups. |
-| Pathway biology | `selected_figures/06_gsea_hallmark.png` | Differential pathway analysis highlights proliferation, DNA repair, metabolic, EMT, and immune-related programs. |
+### 1. Mutation burden summary
+
+![Mutation burden summary](selected_figures/01_summary_statistics.png)
+
+**Interpretation:** Never-smoker LUAD shows lower mutation burden than smoker LUAD.
+
+---
+
+### 2. Mutational process comparison
+
+![Ti/Tv comparison](selected_figures/02_titv_comparison.png)
+
+**Interpretation:** Smoker tumors show stronger tobacco-associated mutational patterns.
+
+---
+
+### 3. Driver landscape
+
+![Driver comparison](selected_figures/03_driver_comparison.png)
+
+**Interpretation:** EGFR is enriched in never-smoker LUAD, while KRAS and high-passenger-burden genes are more frequent in smokers.
+
+---
+
+### 4. EGFR expression by mutation status
+
+![EGFR expression by mutation](selected_figures/04_egfr_expression_by_mutation.png)
+
+**Interpretation:** EGFR-mutant tumors show higher EGFR expression, linking DNA alteration to RNA-level output.
+
+---
+
+### 5. EGFR mutation and copy-number context
+
+![EGFR mutation and amplification](selected_figures/05_egfr_mutation_amplification.png)
+
+**Interpretation:** EGFR mutation and amplification can be jointly summarized across smoking groups.
+
+---
+
+### 6. Hallmark pathway enrichment
+
+![Hallmark GSEA](selected_figures/06_gsea_hallmark.png)
+
+**Interpretation:** Differential pathway analysis highlights proliferation, DNA repair, metabolic, EMT, and immune-related programs.
 
 The curated numeric result tables supporting these figures are available in `selected_results/`, including `summary_statistics.csv` and `CNA_summary.csv`.
 
